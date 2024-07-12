@@ -1,4 +1,4 @@
-<a href="https://idx.google.com/import?url=https%3A%2F%2Fgithub.com%2Fyoutube-public%2Fbasic-login%2Ftree%2Fmain">
+<a href="https://idx.google.com/import?url=https%3A%2F%2Fgithub.com%2Fyoutube-public%2Fbasic-login.git">
   <picture>
     <source
       media="(prefers-color-scheme: dark)"
