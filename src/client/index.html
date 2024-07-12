@@ -1,27 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Basic Login</title>
     <!-- Style -->
-    <style>
+    <style></style>
+  </head>
 
-    </style>
-</head>
-
-<body>
-
+  <body>
     <!-- Content -->
     <div>
-
+      <form onsubmit="formSubmit(event)">
+        <label for="">username: 'emilys'</label>
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          value="emilys"
+        />
+        <br />
+        <label for="">password: 'emilyspass'</label>
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value="emilyspass"
+        />
+        <br />
+        <button type="submit">submit</button>
+      </form>
+      <div>
+        <pre id="user"></pre>
+      </div>
     </div>
 
     <!-- Script -->
     <script>
+      const baseUrl = "https://dummyjson.com";
+      let userData = document.getElementById("user");
 
+      function getDataForm(event) {
+        event.preventDefault();
+        return Object.fromEntries(new FormData(event.target));
+      }
+
+      async function checkLogin(formData) {
+        try {
+          const options = {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          };
+          const res = await fetch(`${baseUrl}/user/login`, options);
+          if (res.status === 200) {
+            const result = await res.json();
+            return result;
+          }
+        } catch (error) {
+          alert(`error ${error}`);
+        }
+      }
+
+      async function formSubmit(event) {
+        const formData = getDataForm(event);
+        if (!formData.username || !formData.password) {
+          alert("กรอกข้อมูลให้ครบถ้วน");
+        }
+        console.log("formData: ", formData);
+        const res = await checkLogin(formData);
+        console.log("res: ", res);
+        if (res) {
+          userData.innerHTML = JSON.stringify(res, null, 2);
+        } else {
+          userData.innerHTML = "เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบข้อมูล";
+        }
+      }
     </script>
-</body>
-
+  </body>
 </html>

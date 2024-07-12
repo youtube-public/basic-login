@@ -1,14 +1,48 @@
-<a href="https://idx.google.com/import?url=https%3A%2F%2Fgithub.com%2Fyoutube-public%2Fbasic-login%2Ftree%2Fmain">
-  <picture>
-    <source
-      media="(prefers-color-scheme: dark)"
-      srcset="https://cdn.idx.dev/btn/open_light_32.svg">
-    <source
-      media="(prefers-color-scheme: light)"
-      srcset="https://cdn.idx.dev/btn/open_dark_32.svg">
-    <img
-      height="32"
-      alt="Open in IDX"
-      src="https://cdn.idx.dev/btn/open_purple_32.svg">
-  </picture>
-</a>
+function sendJson(data) {
+  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(
+    ContentService.MimeType.JSON
+  );
+}
+
+function handlePath(path, body) {
+  if (path === "login") {
+    const { username, password } = body;
+    if (username === "ole" && password == "pass") {
+      const user = {
+        firstname: "fake_siraphop",
+        lastname: "fake_nonpala",
+      };
+      return { status: 200, message: "login success", data: { user } };
+    } else {
+      return { status: 405, message: "login fail" };
+    }
+  }
+  return { status: 400, message: "path not found" };
+}
+
+function handleMethods(e, method) {
+  const path = e.parameter.path;
+  const body =
+    method === "GET"
+      ? e.parameter
+      : {
+          ...JSON.parse(e.postData.contents),
+          ...e.parameter,
+        };
+  if (path) {
+    return sendJson(handlePath(path, body));
+  }
+
+  return sendJson({
+    status: 200,
+    message: "api google apps script connected!",
+  });
+}
+
+function doGet(e) {
+  return handleMethods(e, "GET");
+}
+
+function doPost(e) {
+  return handleMethods(e, "POST");
+}
